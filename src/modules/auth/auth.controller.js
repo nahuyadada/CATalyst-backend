@@ -1,0 +1,88 @@
+import supabase from '../../common/config/supabaseClient.js';
+import fetch from 'node-fetch';
+
+async function signup(req, res) {
+  try {
+    const { email, password, username } = req.body;
+
+    if (!email || !password || !username) {
+      return res.status(400).json({ error: 'Email, password, and username required' });
+    }
+
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      email,
+      password
+    });
+
+    if (authError) return res.status(400).json({ error: authError.message });
+
+    const userId = authData.user.id;
+    console.log('Created user with ID:', userId);
+    const { error: profileError } = await supabase
+      .from('Profile')
+      .insert([{ id: userId, username }]);
+
+    if (profileError) return res.status(400).json({ error: profileError.message });
+
+    res.status(201).json({ ok: true, user: { id: userId, email, username } });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+// --------------------------
+// Login
+// --------------------------
+async function login(req, res) {
+  console.log('Login request received');
+  console.log('Request body:', req.body);
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+
+    const response = await fetch(
+      `${process.env.SUPABASE_URL}/auth/v1/token?grant_type=password`,
+      {
+        method: 'POST',
+        headers: {
+          'apikey': process.env.SUPABASE_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      }
+    );
+
+    const data = await response.json();
+    console.log('Supabase response status:', response.status);
+    console.log('Supabase response data:', data);
+
+    if (data.error) return res.status(400).json({ error: data.error_description });
+    res.json({
+      ok: true,
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      user: data.user
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+// --------------------------
+// Logout
+// --------------------------
+async function logout(req, res) {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(400).json({ error: 'No token provided' });
+
+    const { error } = await supabase.auth.admin.invalidateUserRefreshTokens(token);
+    if (error) return res.status(400).json({ error: error.message });
+
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export { signup, login, logout };
