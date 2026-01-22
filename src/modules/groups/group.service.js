@@ -1,29 +1,63 @@
 import crypto from "crypto";
-import { createGroupRepo, getGroupById } from "./group.repository.js";
+import { createGroupRepo, getGroupById, getAllDataBy, joinGroupRepo, getDataByField,getPendingReq} from "./group.repository.js";
 
-export async function createGroup({name, description, ownerId}) {
-  const joinCode = await generateGroupCode(name);
-  // console.log("Generated Join Code:", joinCode);
-  return createGroupRepo({ name, description, ownerId, joinCode });
+export async function createGroupService({ name, description, ownerId }) {
+  try {
+    const joinCode = await generateGroupCode(name);
+
+    const group = await createGroupRepo({ name, description, ownerId, joinCode });
+
+    return {
+      status: 201,
+      message: "Group created successfully",
+      data: group
+    };
+  } catch (err) {
+    throw new Error("Failed to create group: " + err.message);
+  }
 }
 
 export async function getGroupDetailsService(groupId) {
   return getGroupById(groupId);
 }
 
-export async function getAllDataByService(dataNeed, data, tableName) {
-  return getAllDataBy(dataNeed, data, tableName);
+// export async function getAllDataByService(dataNeed, data, tableName) {
+//   return getAllDataBy(dataNeed, data, tableName);
+// }
+
+// PROPERLY FORMATTED
+export async function joinGroupService(id,joinCode) {
+  if (!checkIfJoinCodeExists(joinCode)) {
+    return { status: 404, message: 'Invalid group code' };
+  }
+  const groupId = await getDataByField("id","join_code",joinCode,"Group");
+  // TODO: CHECK MEMBERSHIP
+  // ===============
+
+  const pending = await getPendingReq(groupId.id,id);
+  if (pending) {
+    return { status: 409, message: 'Join request already pending' };
+  }
+  console.log("Fetched Group ID:", groupId);
+  let join;
+  try{
+    join = await joinGroupRepo(id,joinCode,groupId.id);
+    console.log("Join Group Response:", join);
+
+  } catch (error) {
+    throw error;
+  }
+  
+  return { status: 201, message: 'Join request submitted', data: join };
+  
 }
+
+// ========
 async function checkIfJoinCodeExists(joinCode) {
-  const { data, error } = await supabase
-    .from("Group")
-    .select("join_code")
-    .eq("join_code", joinCode)
-    .single();
-
-
-
+  const group = await getAllDataBy("join_code", joinCode, "Group");
+  return group && group.length > 0;
 }
+
 
 
 async function generateGroupCode(groupName) {
