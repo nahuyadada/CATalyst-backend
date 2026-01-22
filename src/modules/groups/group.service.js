@@ -1,11 +1,10 @@
 import crypto from "crypto";
 import { createGroupRepo, getGroupById, getAllDataBy, joinGroupRepo, getDataByField,getPendingReq} from "./group.repository.js";
 
-export async function createGroupService({ name, description, ownerId }) {
+export async function createGroupService({ name, description, ownerId, color }) {
   try {
     const joinCode = await generateGroupCode(name);
-
-    const group = await createGroupRepo({ name, description, ownerId, joinCode });
+    const group = await createGroupRepo({ name, description, ownerId, joinCode, color });
 
     return {
       status: 201,
@@ -30,19 +29,17 @@ export async function joinGroupService(id,joinCode) {
   if (!checkIfJoinCodeExists(joinCode)) {
     return { status: 404, message: 'Invalid group code' };
   }
+ 
   const groupId = await getDataByField("id","join_code",joinCode,"Group");
   // TODO: CHECK MEMBERSHIP
   // ===============
-
   const pending = await getPendingReq(groupId.id,id);
   if (pending) {
     return { status: 409, message: 'Join request already pending' };
   }
-  console.log("Fetched Group ID:", groupId);
   let join;
   try{
     join = await joinGroupRepo(id,joinCode,groupId.id);
-    console.log("Join Group Response:", join);
 
   } catch (error) {
     throw error;
@@ -61,7 +58,6 @@ async function checkIfJoinCodeExists(joinCode) {
 
 
 async function generateGroupCode(groupName) {
-    console.log("Generating join code for group name:", groupName);
   if (!groupName || typeof groupName !== "string") {
     throw new Error("Invalid group name");
   }

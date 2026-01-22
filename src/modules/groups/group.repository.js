@@ -1,15 +1,14 @@
 import supabase from "../../common/config/supabaseClient.js";
 
 // Creates a group to be added in the database
-export async function createGroupRepo({ name, description, ownerId, joinCode }) {
-
+export async function createGroupRepo({ name, description, ownerId, joinCode, color }) {
   const { data, error } = await supabase.from("Group").insert([{
     name,
     description,
     owner_id: ownerId,
     join_code: joinCode,
+    color
   }]).select().single();
-  console.log("Supabase Insert Response:", { data, error });
   if (error) {
     throw new Error("Error creating group: " + error.message);
   }
@@ -17,13 +16,11 @@ export async function createGroupRepo({ name, description, ownerId, joinCode }) 
   
 }
 export async function joinGroupRepo(userId,joinCode,groupId) {
-  console.log("Joining group with:", { userId, joinCode, groupId });
   const { data, error } = await supabase.from("group_join_request").insert([{
     user_id: userId,
     // join_code: joinCode,
     group_id: groupId
   }]).select().single();
-  console.log("Supabase Insert Response:", { data, error });
   if (error) {
     throw new Error("Error joining group: " + error.message);
   }
@@ -32,13 +29,11 @@ export async function joinGroupRepo(userId,joinCode,groupId) {
 
 // Gets the data you want using an existing field in the table
 export async function getDataByField(dataNeeded, field,value, tableName) {
-  console.log(`Fetching ${dataNeeded} from ${tableName} where ${field} = ${value}`);
   const { data, error } = await supabase
     .from(tableName)
     .select(dataNeeded)
     .eq(field, value)
     .single();
-  console.log("Supabase Select Response:", { data, error });
   if (error) {
       throw new Error("Group not found");
   }
@@ -59,7 +54,6 @@ export async function getGroupById(groupId) {
 
 
 export async function getPendingReq(groupId, userId) {
-  console.log(`Checking pending request for user ${userId} in group ${groupId}`);
 
   const { data: pendingRequest, error } = await supabase
     .from('group_join_request')

@@ -17,7 +17,7 @@ async function signup(req, res) {
     if (authError) return res.status(400).json({ error: authError.message });
 
     const userId = authData.user.id;
-    console.log('Created user with ID:', userId);
+    // console.log('Created user with ID:', userId);
     const { error: profileError } = await supabase
       .from('Profile')
       .insert([{ id: userId, username }]);
@@ -34,8 +34,6 @@ async function signup(req, res) {
 // Login
 // --------------------------
 async function login(req, res) {
-  console.log('Login request received');
-  console.log('Request body:', req.body);
   try {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
@@ -53,8 +51,6 @@ async function login(req, res) {
     );
 
     const data = await response.json();
-    console.log('Supabase response status:', response.status);
-    console.log('Supabase response data:', data);
 
     if (data.error) return res.status(400).json({ error: data.error_description });
     res.json({

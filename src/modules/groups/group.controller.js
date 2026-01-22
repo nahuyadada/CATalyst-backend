@@ -1,7 +1,8 @@
 import { createGroupService, getGroupDetailsService,joinGroupService } from './group.service.js';
+// used
 export async function groupCreation(req, res, next) {
   try {
-    const { name, description, ownerId } = req.body;
+    const { name, description, ownerId, color } = req.body;
 
     if (!name || !ownerId) {
       return res.status(400).json({
@@ -10,7 +11,7 @@ export async function groupCreation(req, res, next) {
       });
     }
 
-    const result = await createGroupService({ name, description, ownerId });
+    const result = await createGroupService({ name, description, ownerId, color });
 
     return res.status(result.status).json({
       success: true,
@@ -43,11 +44,10 @@ export async function getGroupDetails(req, res) {
         return res.status(500).json({ error: err.message });
     }
 }
-
+//  used
 export async function joinGroup(req, res) {
     try {
         const { userId, joinCode } = req.body;  
-        console.log("userId:", userId, "joinCode:", joinCode);
         if (!userId || !joinCode) {
             return res.status(400).json({ error: "User ID and Join Code are required" });
         }
