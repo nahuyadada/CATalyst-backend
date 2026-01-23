@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { createGroupRepo, getGroupById, getAllDataBy, joinGroupRepo, getDataByField,getPendingReq} from "./group.repository.js";
+import { createGroupRepo, getAllDataBy, joinGroupRepo, getDataByField,getPendingReq,getAllDataByField} from "./group.repository.js";
 
 export async function createGroupService({ name, description, ownerId, color }) {
   try {
@@ -44,9 +44,19 @@ export async function joinGroupService(id,joinCode) {
   } catch (error) {
     throw error;
   }
-  
   return { status: 201, message: 'Join request submitted', data: join };
   
+}
+// used
+export async function getGroupsByIdService(id) {
+  const groups =  await getAllDataByField("*","owner_id",id,"Group");
+  console.log("Groups fetched:", groups);
+  return {status:201,message:"Join code fetched successfully",data:groups};
+}
+
+// TODO
+export async function getInvitesByStatus(groupId, status) {
+  return viewRequestsRepo(groupId, status);
 }
 
 // ========

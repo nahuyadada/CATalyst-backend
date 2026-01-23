@@ -1,4 +1,4 @@
-import { createGroupService, getGroupDetailsService,joinGroupService } from './group.service.js';
+import { createGroupService,getGroupsByIdService,joinGroupService} from './group.service.js';
 // used
 export async function groupCreation(req, res, next) {
   try {
@@ -36,8 +36,8 @@ export async function getGroupDetails(req, res) {
         if (!groupId) {
             return res.status(400).json({ error: "Group ID is required" });
         }
-        const group = await getGroupById(groupId);
-        res.json({ group });
+        // const group = await getGroupById(groupId);
+        // res.json({ group });
 
         return res.status(201).json({ success: true, message: "Group details fetched successfully", data: group, });
     } catch (err) {
@@ -70,6 +70,19 @@ export async function getJoinCode(req, res) {
         }
         const group = await getGroupByJoinCode(joinCode);
         res.json({ group });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+}
+export async function getGroupsById(req, res) {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ error: "ID is required" });
+        }
+        const groups = await getGroupsByIdService(id);
+        console.log("Invites: ",groups);
+        res.json({ groups });
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }

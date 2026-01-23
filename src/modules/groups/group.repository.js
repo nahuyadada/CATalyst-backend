@@ -27,6 +27,19 @@ export async function joinGroupRepo(userId,joinCode,groupId) {
   return data;
 }
 
+export async function viewRequestsRepo(groupId,invStatus) {
+  const { data, error } = await supabase
+    .from("group_join_request")
+    .select("*")
+    .eq("group_id", groupId)
+    .eq("status", invStatus);
+  if (error) {
+    throw new Error("Error fetching join requests: " + error.message);
+  }
+  return data;
+}
+
+
 // Gets the data you want using an existing field in the table
 export async function getDataByField(dataNeeded, field,value, tableName) {
   const { data, error } = await supabase
@@ -35,7 +48,20 @@ export async function getDataByField(dataNeeded, field,value, tableName) {
     .eq(field, value)
     .single();
   if (error) {
-      throw new Error("Group not found");
+      throw new Error(`${field} not found in ${tableName}`);
+  }
+  return data;
+}
+export async function getAllDataByField(dataNeeded, field,value, tableName) {
+  console.log(`Fetching ${dataNeeded} from ${tableName} where ${field} = ${value}`);
+  const { data, error } = await supabase
+    .from(tableName)
+    .select(dataNeeded)
+    .eq(field, value)
+    
+  if (error) {
+    throw new Error(`${field} not found in ${tableName}`);
+
   }
   return data;
 }
