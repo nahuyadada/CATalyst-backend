@@ -4,6 +4,7 @@ import routes from './routes/index.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import  errorHandler  from './common/middlewares/errorHandler.js';
 import groupRoutes from './modules/groups/group.routes.js';
+import extractorRoutes from './modules/extractor/extractor.routes.js';
 const app = express();
 
 app.use(
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api', routes);
 app.use('/api/auth',authRoutes);
 app.use('/api/groups',groupRoutes);
+app.use('/api/extractor',extractorRoutes);
 
 app.use(errorHandler);
 
