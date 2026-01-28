@@ -89,7 +89,7 @@ export async function getExtractorDataByGroupIdRepo(groupId) {
       .from("Extractor")
       .select("*")
       .eq("group_id", groupId)
-      .single();
+      
     if (error) {
       throw new Error("Extractor data not found for group: " + error.message);
     }
