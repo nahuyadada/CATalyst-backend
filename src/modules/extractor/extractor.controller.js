@@ -1,5 +1,5 @@
 import multer from "multer";
-import { runExtractorService } from "./extractor.service.js";
+import { runExtractorService, fetchExtractedDataUsingGroupIdService } from "./extractor.service.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -28,3 +28,21 @@ export const startExtractorController = [
     }
   },
 ];
+export async function fetchExtractorDataByGroupIdController(req, res, next) {
+  try {
+    const groupId = req.params.group_id;
+    console.log("Fetching data for group ID:", groupId);
+    const result = await fetchExtractedDataUsingGroupIdService(groupId);
+    return res.status(result.status).json({
+      success: result.status < 400,
+      message: result.message,
+      data: result.data || null,
+    });
+  } catch (err) {
+    console.error("Controller error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  } 
+}

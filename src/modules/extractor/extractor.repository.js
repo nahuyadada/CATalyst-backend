@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import FormData from "form-data";
 import supabase from "../../common/config/supabaseClient.js";
+import e from "express";
 
 /**
  * Trigger n8n workflow with a file
@@ -78,6 +79,23 @@ export async function insertExtractorRepo(groupId, extractedData) {
     return data;
   } catch (err) {
     console.error("Extractor Repo Error:", err);
+    throw err;
+  }
+}
+
+export async function getExtractorDataByGroupIdRepo(groupId) {
+  try {
+    const { data, error } = await supabase
+      .from("Extractor")
+      .select("*")
+      .eq("group_id", groupId)
+      .single();
+    if (error) {
+      throw new Error("Extractor data not found for group: " + error.message);
+    }
+    return data;
+  } catch (err) {
+    console.error("Get Extractor Repo Error:", err);
     throw err;
   }
 }
