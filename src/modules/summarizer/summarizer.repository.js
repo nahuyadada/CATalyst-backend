@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import supabase from "../../common/config/supabaseClient.js";
 
 export async function triggerSummarizerWorkflow(data) {
     const webhookUrl = process.env.N8N_SUMMARIZER_WEBHOOK_URL;
@@ -17,4 +18,43 @@ export async function triggerSummarizerWorkflow(data) {
     const result = await res.json();
     return result
 
+}
+export async function insertSummarizerRepo(groupId, summarizedData) {
+  try {
+    const {
+      title,
+      introduction,
+      literature_review,
+      methodology,
+      discussion,
+      results,
+      conclusion,
+    } = summarizedData;
+
+    const { data, error } = await supabase
+      .from("Summary")
+      .insert([
+        {
+          title:title,
+          group_id: groupId,
+          introduction,
+          literature_review,
+          methodology,
+          discussion,
+          results,
+          conclusion,
+        },
+      ])
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error("Failed to insert summarizer result: " + error.message);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Summarizer repo error:", err);
+    throw err;
+  }
 }
