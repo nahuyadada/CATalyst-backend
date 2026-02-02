@@ -58,3 +58,21 @@ export async function insertSummarizerRepo(groupId, summarizedData) {
     throw err;
   }
 }
+
+export async function getSummaryByGroupIdRepo(group_id){
+    try {
+    const { data, error } = await supabase
+      .from("Summary")
+      .select("*")
+      .eq("group_id", group_id)
+      
+    if (error) {
+      throw new Error("Summary data not found for group: " + error.message);
+    }
+    return data;
+  } catch (err) {
+    console.error("Summary Repo Error:", err);
+    throw err;
+  }
+
+}
