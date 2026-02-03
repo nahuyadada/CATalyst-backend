@@ -7,7 +7,7 @@ export async function runExtractorService(file, filename) {
 
   try {
     const result = await triggerExtractorWorkflow(file, filename);
-    const insertedData = await insertExtractorRepo("a2febd0e-d1c2-471d-895a-670e856e8323",result[0]);
+    const insertedData = await insertExtractorRepo("a556f476-774d-4bf6-b23e-d4c520de1ac7",result[0]);
     console.log("Service received result:", result[0]);
     return { status: 200, message: "Workflow triggered successfully", data: result[0] || null };
   } catch (err) {
