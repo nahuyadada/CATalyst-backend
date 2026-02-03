@@ -6,6 +6,7 @@ import  errorHandler  from './common/middlewares/errorHandler.js';
 import groupRoutes from './modules/groups/group.routes.js';
 import extractorRoutes from './modules/extractor/extractor.routes.js';
 import summarizerRoutes from './modules/summarizer/summarizer.router.js';
+import gapRoutes from './modules/gap/gap.routes.js';
 const app = express();
 
 app.use(
@@ -26,6 +27,8 @@ app.use('/api/auth',authRoutes);
 app.use('/api/groups',groupRoutes);
 app.use('/api/extractor',extractorRoutes);
 app.use('/api/summarizer',summarizerRoutes);
+app.use('/api/gap',gapRoutes);
+
 
 app.use(errorHandler);
 

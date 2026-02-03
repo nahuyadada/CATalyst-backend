@@ -10,7 +10,6 @@ export async function triggerSummarizerWorkflow(data) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
     });
-    console.log("Response status:", res.status);
     if (!res.ok) {
         const errorText = await res.text();
         throw new Error(`Failed to trigger workflow: ${res.status} - ${errorText}`);
@@ -75,4 +74,21 @@ export async function getSummaryByGroupIdRepo(group_id){
     throw err;
   }
 
+}
+export async function getSummaryByIdRepo(id){
+  try{
+    const {data, error} = await supabase
+    .from("Summary")
+    .select("*")
+    .eq("id", id)
+    .single()
+
+    if(error){
+      throw new Error("Summary data not found for ID: "+ id)
+    }
+    return data;
+  } catch(err){
+    console.error("Summary Repo Error: ",err);
+    throw err;
+  }
 }

@@ -35,5 +35,5 @@ export async function fetchSumamryDataByGroupIdController(req,res,next){
       message: "Internal server error",
     });
   } 
-  
+
 }

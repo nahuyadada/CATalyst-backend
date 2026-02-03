@@ -1,4 +1,4 @@
-import { triggerSummarizerWorkflow, insertSummarizerRepo, getSummaryByGroupIdRepo } from "./summarizer.repository.js";
+import { triggerSummarizerWorkflow, insertSummarizerRepo, getSummaryByGroupIdRepo, getSummaryByIdRepo } from "./summarizer.repository.js";
 // import { fetchExtractedDataUsingGroupIdService } from "../extractor/extractor.service.js";  
 import { getExtractedDataByIdRepo } from "../extractor/extractor.repository.js";
 export async function runSummarizerService(data) {
@@ -49,7 +49,6 @@ export async function runSummarizerService(data) {
 }
 
 export async function fetchSummarizedDataUsingGroupIdService(group_id) {
-  console.log("test: ",group_id)
     try {
         const data = await getSummaryByGroupIdRepo(group_id);
         if (!data || data.length === 0) {
@@ -62,7 +61,6 @@ export async function fetchSummarizedDataUsingGroupIdService(group_id) {
     }
 }
 function mapSummarizerResult(n8nArray, title) {
-    console.log("title:",title)
   return {
     title,
     introduction:      n8nArray[0]?.value ?? "not found",
@@ -76,7 +74,7 @@ function mapSummarizerResult(n8nArray, title) {
 
 export async function fetchSummaryDataByGroupIdService(group_id){
   try {
-    const data = await getExtractorDataByGroupIdRepo(groupId);
+    const data = await getExtractorDataByGroupIdRepo(gro);
     if (!data || data.length === 0) {
       return { status: 404, message: "No data found for the given group ID" };
     }
@@ -85,4 +83,16 @@ export async function fetchSummaryDataByGroupIdService(group_id){
     console.error("Service error:", err);
     return { status: 500, message: "Failed to retrieve data: " + err.message };
   }  
+}
+export async function fetchSummaryDataByIdService(id){
+  try{
+    const data = await getSummaryByIdRepo(id);
+    if(!data || data.length === 0){
+      return { status:404, message: "No data found for ID: "+id}
+    }
+    return { status: 200, message: "Data retrieved successfully", data: data };
+  } catch (err){
+    console.error("Service error:", err);
+    return { status: 500, message: "Failed to retrieve data: " + err.message };
+  }
 }
