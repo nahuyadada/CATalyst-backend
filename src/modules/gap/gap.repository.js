@@ -47,3 +47,20 @@ export async function insertDataToGapRepository(group_id,title, gapResults){
         throw err;
     }
 }
+export async function getGapUsingGroupIdRepo(group_id){
+    try {
+        const { data, error } = await supabase
+            .from("GapResult")
+            .select("*")
+            .eq("group_id", group_id)
+      
+        if (error) {
+        throw new Error("Gap result data not found for group: " + error.message);
+        }
+        return data;
+    } catch (err) {
+        console.error("Gap Repo Error:", err);
+        throw err;
+    }
+
+}
