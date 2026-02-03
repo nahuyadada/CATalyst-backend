@@ -17,3 +17,32 @@ export async function triggerTopicSuggesterWorkflow(data) {
     return result
 
 }
+
+export async function insertDataToTopicRepository(group_id,topicResult){
+    
+    try {
+        const {
+        topic,rationale
+        } = topicResult;
+        const { data, error } = await supabase
+            .from("Topic")
+            .insert([
+                {
+                group_id:group_id,
+                title:topic,
+                rationale: rationale
+                },
+            ])
+            .select()
+            .single();
+
+        if (error) {
+        throw new Error("Failed to insert topic result: " + error.message);
+        }
+
+        return data;
+    } catch (err) {
+        console.error("Topic repo error:", err);
+        throw err;
+    }
+}
