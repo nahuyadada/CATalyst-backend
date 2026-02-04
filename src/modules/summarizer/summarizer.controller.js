@@ -21,7 +21,6 @@ export async function startSummarizerController(req, res, next) {
 export async function fetchSumamryDataByGroupIdController(req,res,next){
   try {
     const groupId = req.params.group_id;
-    console.log("Fetching data for group ID:", groupId);
     const result = await fetchSummarizedDataUsingGroupIdService(groupId);
     return res.status(result.status).json({
       success: result.status < 400,

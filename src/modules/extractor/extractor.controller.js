@@ -31,7 +31,6 @@ export const startExtractorController = [
 export async function fetchExtractorDataByGroupIdController(req, res, next) {
   try {
     const groupId = req.params.group_id;
-    console.log("Fetching data for group ID:", groupId);
     const result = await fetchExtractedDataUsingGroupIdService(groupId);
     return res.status(result.status).json({
       success: result.status < 400,

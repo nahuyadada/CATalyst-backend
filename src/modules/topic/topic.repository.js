@@ -46,3 +46,21 @@ export async function insertDataToTopicRepository(group_id,topicResult){
         throw err;
     }
 }
+
+export async function fetchTopicDataByGroupIdRepo(group_id){
+    try {
+        const { data, error } = await supabase
+        .from("Topic")
+        .select("*")
+        .eq("group_id", group_id)
+        
+        if (error) {
+        throw new Error("Topic data not found for group: " + error.message);
+        }
+        return data;
+  } catch (err) {
+    console.error("Topic Repo Error:", err);
+    throw err;
+  }
+
+}

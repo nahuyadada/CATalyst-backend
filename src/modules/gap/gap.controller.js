@@ -20,7 +20,6 @@ export async function startGapExtractorController(req,res,next){
 export async function fetchGapDataByGroupIdController(req,res,next){
   try {
     const groupId = req.params.group_id;
-    console.log("Fetching data for group ID:", groupId);
     const result = await fetchGapsDataUsingGroupIdService(groupId);
     return res.status(result.status).json({
       success: result.status < 400,
