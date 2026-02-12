@@ -7,9 +7,9 @@ import supabase from "../../common/config/supabaseClient.js";
  * @param {Buffer|Stream} file - uploaded file
  * @param {string} filename - original file name
  */
-export async function triggerExtractorWorkflow(file, filename) {
-  // const webhookUrl = process.env.N8N_EXTRACTOR_WEBHOOK;
-  const webhookUrl = process.env.N8N_EXTRACTOR_TEST_WEBHOOK;
+export async function   triggerExtractorWorkflow(file, filename) {
+  const webhookUrl = process.env.N8N_EXTRACTOR_WEBHOOK;
+  // const webhookUrl = process.env.N8N_EXTRACTOR_TEST_WEBHOOK;
   console.log("Triggering extractor workflow:", webhookUrl, filename);
 
   try {
@@ -36,7 +36,7 @@ export async function triggerExtractorWorkflow(file, filename) {
   }
 }
 
-export async function insertExtractorRepo(groupId, extractedData) {
+export async function insertExtractorRepo(group_id, extractedData) {
   try {
     const {
       title,
@@ -56,7 +56,7 @@ export async function insertExtractorRepo(groupId, extractedData) {
       .from("Extractor")
       .insert([
         {
-          group_id: groupId,
+          group_id: group_id,
           title,
           abstract,
           introduction,
@@ -70,7 +70,7 @@ export async function insertExtractorRepo(groupId, extractedData) {
       ])
       .select()
       .single();
-
+    // const data = {yay:group_id}
     if (error) {
       throw new Error("Failed to insert extractor result: " + error.message);
     }

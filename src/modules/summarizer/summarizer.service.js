@@ -27,7 +27,6 @@ export async function runSummarizerService(data) {
     const n8nResult = await triggerSummarizerWorkflow(finalExtractedData);
 
     const mappedResult = mapSummarizerResult(n8nResult,extractedData.title);
-    console.log("group id: ",data.groupId)
     const insertedData = await insertSummarizerRepo(
     //   data.group_id,
       "a556f476-774d-4bf6-b23e-d4c520de1ac7",

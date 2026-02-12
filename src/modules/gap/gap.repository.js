@@ -2,7 +2,8 @@ import fetch from 'node-fetch'
 import supabase from "../../common/config/supabaseClient.js";
 
 export async function triggerGapExtractorWorkflow(data) {
-    const webhookUrl = process.env.N8N_GAPEXTRACTOR_TEST_WEBHOOK_URL;
+    const webhookUrl = process.env.N8N_GAPEXTRACTOR_PROD_WEBHOOK_URL;
+    // const webhookUrl = process.env.N8N_GAPEXTRACTOR_TEST_WEBHOOK_URL;
 
     const res = await fetch(webhookUrl, {
         method: "POST",
@@ -28,7 +29,7 @@ export async function insertDataToGapRepository(group_id,title, gapResults){
             .from("GapResult")
             .insert([
                 {
-                group_id:group_id,
+                group_id:"f7acda59-1c84-421c-b7ba-f0a493e871bf",
                 title:title,
                 gap:gaps,
                 keywords:keywords

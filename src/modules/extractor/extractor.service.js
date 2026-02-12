@@ -1,14 +1,14 @@
 import { triggerExtractorWorkflow, insertExtractorRepo, getExtractorDataByGroupIdRepo } from "./extractor.repository.js";
 
-export async function runExtractorService(file, filename) {
+export async function runExtractorService(file, filename,group_id) {
   if (!file) {
     return { status: 400, message: "File is required" };
   }
 
   try {
     const result = await triggerExtractorWorkflow(file, filename);
-    const insertedData = await insertExtractorRepo("a556f476-774d-4bf6-b23e-d4c520de1ac7",result[0]);
-    console.log("Service received result:", result[0]);
+    const insertedData = await insertExtractorRepo(group_id,result[0]);
+    // const insertedData = await insertExtractorRepo(group_id,null);
     return { status: 200, message: "Workflow triggered successfully", data: result[0] || null };
   } catch (err) {
     console.error("Service error:", err);
