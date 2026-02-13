@@ -53,7 +53,6 @@ export async function getDataByField(dataNeeded, field,value, tableName) {
   return data;
 }
 export async function getAllDataByField(dataNeeded, field,value, tableName) {
-  console.log(`Fetching ${dataNeeded} from ${tableName} where ${field} = ${value}`);
   const { data, error } = await supabase
     .from(tableName)
     .select(dataNeeded)

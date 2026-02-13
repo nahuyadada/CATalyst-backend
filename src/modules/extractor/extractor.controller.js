@@ -7,7 +7,6 @@ export const startExtractorController = [
   upload.single("file"), 
   async (req, res, next) => {
     try {
-      console.log("req.file:", req.file);
       const file = req.file?.buffer;
       const filename = req.file?.originalname;
       // ========

@@ -10,7 +10,6 @@ import supabase from "../../common/config/supabaseClient.js";
 export async function   triggerExtractorWorkflow(file, filename) {
   const webhookUrl = process.env.N8N_EXTRACTOR_WEBHOOK;
   // const webhookUrl = process.env.N8N_EXTRACTOR_TEST_WEBHOOK;
-  console.log("Triggering extractor workflow:", webhookUrl, filename);
 
   try {
     const formData = new FormData();
@@ -27,12 +26,11 @@ export async function   triggerExtractorWorkflow(file, filename) {
       throw new Error(`n8n webhook failed: ${res.status} ${text}`);
     }
 
-    const data = await res.json(); // optional if workflow returns JSON
-    // console.log("n8n workflow response:", data);
+    const data = await res.json(); 
     return data;
   } catch (err) {
     console.error("Workflow repo error:", err);
-    throw err; // propagate system-level error
+    throw err;
   }
 }
 

@@ -81,7 +81,6 @@ export async function getGroupsById(req, res) {
             return res.status(400).json({ error: "ID is required" });
         }
         const groups = await getGroupsByIdService(id);
-        // console.log("Invites: ",groups);
         res.json({ groups });
     } catch (err) {
         return res.status(500).json({ error: err.message });

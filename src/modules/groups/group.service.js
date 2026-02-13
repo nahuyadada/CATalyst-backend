@@ -50,7 +50,6 @@ export async function joinGroupService(id,joinCode) {
 // used
 export async function getGroupsByIdService(id) {
   const groups =  await getAllDataByField("*","owner_id",id,"Group");
-  console.log("Groups fetched:", groups);
   return {status:201,message:"Join code fetched successfully",data:groups};
 }
 
