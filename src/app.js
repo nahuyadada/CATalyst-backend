@@ -12,14 +12,23 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, 
+    // origin: process.env.FRONTEND_URL, 
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
 );
 // app.options('*', cors());
-
+app.get('/status', (_req, res) => {
+  res.json({
+    status: 'Running',
+    timestamp: new Date().toISOString()
+  });
+});
+app.get('/', (_req, res) => {
+  res.send('Backend is running!');
+});
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
