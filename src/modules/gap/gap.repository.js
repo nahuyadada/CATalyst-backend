@@ -20,7 +20,6 @@ export async function triggerGapExtractorWorkflow(data) {
 }
 
 export async function insertDataToGapRepository(group_id,title, gapResults){
-    
     try {
         const {
         gaps,keywords
@@ -29,7 +28,7 @@ export async function insertDataToGapRepository(group_id,title, gapResults){
             .from("GapResult")
             .insert([
                 {
-                group_id:"f7acda59-1c84-421c-b7ba-f0a493e871bf",
+                group_id:group_id,
                 title:title,
                 gap:gaps,
                 keywords:keywords

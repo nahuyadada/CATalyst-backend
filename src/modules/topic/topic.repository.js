@@ -20,7 +20,7 @@ export async function triggerTopicSuggesterWorkflow(data) {
 }
 
 export async function insertDataToTopicRepository(group_id,topicResult){
-    
+    console.log("Inserting topic result to repository for group_id:", group_id);
     try {
         const {
         topic,rationale
@@ -29,14 +29,14 @@ export async function insertDataToTopicRepository(group_id,topicResult){
             .from("Topic")
             .insert([
                 {
-                group_id:"f7acda59-1c84-421c-b7ba-f0a493e871bf",
+                group_id:group_id,
                 title:topic,
                 rationale: rationale
                 },
             ])
             .select()
             .single();
-
+        console.log("Topic result to insert:", topicResult);
         if (error) {
         throw new Error("Failed to insert topic result: " + error.message);
         }
