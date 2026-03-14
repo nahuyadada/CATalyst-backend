@@ -1,4 +1,4 @@
-import { createGroupService,getGroupsByIdService,joinGroupService} from './group.service.js';
+import { createGroupService,getGroupsByIdService,joinGroupService, setRequestStatusService} from './group.service.js';
 // used
 export async function groupCreation(req, res, next) {
   try {
@@ -85,4 +85,27 @@ export async function getGroupsById(req, res) {
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }
+}
+
+// set request status
+
+export async function setRequestStatus(req, res) {
+  try {
+    const { requestId } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ error: "Status is required" });
+    }
+
+    const result = await setRequestStatusService(requestId, status);
+
+    return res.status(result.status).json({
+      success: true,
+      message: result.message,
+      data: result.data || null
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 }

@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { createGroupRepo, getAllDataBy, joinGroupRepo, getDataByField,getPendingReq,getAllDataByField} from "./group.repository.js";
+import { createGroupRepo, getAllDataBy, joinGroupRepo, getDataByField,getPendingReq,getAllDataByField, changeRequestStatus} from "./group.repository.js";
 
 export async function createGroupService({ name, description, ownerId, color }) {
   try {
@@ -24,6 +24,17 @@ export async function getGroupDetailsService(groupId) {
 //   return getAllDataBy(dataNeed, data, tableName);
 // }
 
+export async function setRequestStatusService(requestId, status) {
+  try {
+    const { data, error } = await changeRequestStatus(requestId, status);
+    if (error) {
+      throw new Error("Error updating request status: " + error.message);
+    }
+    return { status: 200, message: "Request status updated successfully", data };
+    } catch (err) {
+      throw new Error("Failed to update request status: " + err.message);
+    }
+  }
 // PROPERLY FORMATTED
 export async function joinGroupService(id,joinCode) {
   if (!checkIfJoinCodeExists(joinCode)) {

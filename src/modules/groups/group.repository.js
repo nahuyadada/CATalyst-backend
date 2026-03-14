@@ -97,6 +97,20 @@ export async function getPendingReq(groupId, userId) {
   return pendingRequest; 
 }
 
+export async function changeRequestStatus(requestId, newStatus) {
+  const { data, error } = await supabase
+    .from('group_join_request')
+    .update({ status: newStatus })
+    .eq('id', requestId)
+    .select()
+    .single();
+  if (error) {
+    console.error("Error updating request status:", error);
+    throw error;
+  }
+  return data;
+}
+
 
 
 
