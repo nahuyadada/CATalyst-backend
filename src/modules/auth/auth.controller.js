@@ -3,20 +3,26 @@ import fetch from 'node-fetch';
 
 async function signup(req, res) {
   try {
-    const { email, password, username } = req.body;
+    const { email, password } = req.body;
+    const username = email.split("@")[0];
 
-    if (!email || !password || !username) {
-      return res.status(400).json({ error: 'Email, password, and username required' });
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email, password required' });
     }
+
+    console.log('Signup request received for email:', email,password);
+
 
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email,
-      password
+      password,
+      email_confirm: true
     });
 
     if (authError) return res.status(400).json({ error: authError.message });
 
     const userId = authData.user.id;
+
     // console.log('Created user with ID:', userId);
     const { error: profileError } = await supabase
       .from('Profile')
@@ -52,7 +58,13 @@ async function login(req, res) {
 
     const data = await response.json();
 
-    if (data.error) return res.status(400).json({ error: data.error_description });
+    // if (data.error) return res.status(400).json({ error: data.error_description });
+    if (!response.ok) {
+      console.error('Login error:', data);
+      return res.status(response.status).json({
+        error: data.error_description || "Login failed",
+      });
+    }
     res.json({
       ok: true,
       access_token: data.access_token,

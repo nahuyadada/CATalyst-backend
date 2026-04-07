@@ -111,6 +111,18 @@ export async function changeRequestStatus(requestId, newStatus) {
   return data;
 }
 
+export async function addToGroupMembersRepo(user_id, group_id,role,) {
+  const { data, error } = await supabase.from("group_members").insert([{
+    user_id,
+    group_id, 
+    role
+  }]).select().single();
+  if (error) {
+    throw new Error("Error adding member to group: " + error.message);
+  } 
+  return data;
+}
+
 
 
 

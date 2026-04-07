@@ -1,11 +1,12 @@
 import crypto from "crypto";
-import { createGroupRepo, getAllDataBy, joinGroupRepo, getDataByField,getPendingReq,getAllDataByField, changeRequestStatus} from "./group.repository.js";
+import { addToGroupMembersRepo,createGroupRepo, getAllDataBy, joinGroupRepo, getDataByField,getPendingReq,getAllDataByField, changeRequestStatus} from "./group.repository.js";
 
 export async function createGroupService({ name, description, ownerId, color }) {
   try {
     const joinCode = await generateGroupCode(name);
     const group = await createGroupRepo({ name, description, ownerId, joinCode, color });
-
+    // added to include group members table
+    const groupMember = await addToGroupMembersRepo(ownerId, group.id, "owner");
     return {
       status: 201,
       message: "Group created successfully",
@@ -27,14 +28,15 @@ export async function getGroupDetailsService(groupId) {
 export async function setRequestStatusService(requestId, status) {
   try {
     const { data, error } = await changeRequestStatus(requestId, status);
-    if (error) {
-      throw new Error("Error updating request status: " + error.message);
-    }
-    return { status: 200, message: "Request status updated successfully", data };
-    } catch (err) {
-      throw new Error("Failed to update request status: " + err.message);
-    }
+  if (error) {
+    throw new Error("Error updating request status: " + error.message);
   }
+  return { status: 200, message: "Request status updated successfully", data };
+  } catch (err) {
+    throw new Error("Failed to update request status: " + err.message);
+  }
+}
+
 // PROPERLY FORMATTED
 export async function joinGroupService(id,joinCode) {
   if (!checkIfJoinCodeExists(joinCode)) {
