@@ -124,7 +124,35 @@ export async function addToGroupMembersRepo(user_id, group_id,role,) {
 }
 
 
+export async function updateGroupRepo(id, { name, description, color }) {
+  const { data, error } = await supabase
+    .from("Group")
+    .update({ name, description, color })
+    .eq("id", id)
+    .select()
+    .single();
 
+  if (error) {
+    throw new Error("Error updating group: " + error.message);
+  }
+
+  return data;
+}
+
+export async function deleteGroupRepo(id) {
+  const { data, error } = await supabase
+    .from("Group")
+    .update({ is_active: false }) 
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error("Error deleting group: " + error.message);
+  }
+
+  return data;
+}
 
 
 

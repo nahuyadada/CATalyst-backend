@@ -1,5 +1,6 @@
 import crypto from "crypto";
-import { addToGroupMembersRepo,createGroupRepo, getAllDataBy, joinGroupRepo, getDataByField,getPendingReq,getAllDataByField, changeRequestStatus} from "./group.repository.js";
+import { addToGroupMembersRepo,createGroupRepo, deleteGroupRepo, updateGroupRepo,
+   getAllDataBy, joinGroupRepo, getDataByField,getPendingReq,getAllDataByField, changeRequestStatus} from "./group.repository.js";
 
 export async function createGroupService({ name, description, ownerId, color }) {
   try {
@@ -101,4 +102,32 @@ async function generateGroupCode(groupName) {
 
   // Final code: letters + numbers only, no symbols, no spaces
   return `${firstLetter}${lastLetter}-${randomPart}`;
+}
+
+
+
+export async function updateGroupService(id, data) {
+  try {
+    const updated = await updateGroupRepo(id, data);
+    return {
+      status: 200,
+      message: "Group updated successfully",
+      data: updated
+    };
+  } catch (err) {
+    throw new Error("Failed to update group: " + err.message);
+  }
+}
+
+export async function deleteGroupService(id) {
+  try {
+    const deleted = await deleteGroupRepo(id);
+    return {
+      status: 200,
+      message: "Group deleted successfully",
+      data: deleted
+    };
+  } catch (err) {
+    throw new Error("Failed to delete group: " + err.message);
+  }
 }

@@ -1,5 +1,5 @@
 import express from 'express';
-import { groupCreation,getGroupDetails,getJoinCode, joinGroup,getGroupsById, setRequestStatus} from './group.controller.js';
+import { groupCreation,getGroupDetails,getJoinCode, joinGroup,getGroupsById, setRequestStatus, updateGroup, deleteGroup     } from './group.controller.js';
 
 const router = express.Router();
 
@@ -10,9 +10,9 @@ router.post('/join', joinGroup);
 router.get('/:id', getGroupsById);
 
 
-// TODO: Implement invite groups and roles
-router.post('/accept/:requestId', setRequestStatus); // get role of user in group and group details
-
+router.post('/accept/:requestId', setRequestStatus);
+router.put('/update/:id', updateGroup);
+router.delete('/delete/:id', deleteGroup);
 
 
 export default router;
