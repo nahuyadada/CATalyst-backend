@@ -44,12 +44,18 @@ async function login(req, res) {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
 
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY;
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return res.status(500).json({ error: 'Supabase env vars are not configured' });
+    }
+
     const response = await fetch(
-      `${process.env.SUPABASE_URL}/auth/v1/token?grant_type=password`,
+      `${supabaseUrl}/auth/v1/token?grant_type=password`,
       {
         method: 'POST',
         headers: {
-          'apikey': process.env.SUPABASE_KEY,
+          'apikey': supabaseAnonKey,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ email, password })
